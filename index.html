@@ -65,7 +65,7 @@
   <script>
     const button = document.getElementById('open-gate');
     const status = document.getElementById('status');
-    const tg = window.Telegram && window.Telegram.WebApp;
+    const tg = window.Telegram?.WebApp;
 
     if (tg) {
       tg.ready();
@@ -74,7 +74,7 @@
 
     button.addEventListener('click', () => {
       if (!tg || typeof tg.sendData !== 'function') {
-        status.textContent = 'Apri questa pagina dalla Mini App di Telegram per inviare /open al bot.';
+        status.textContent = 'Questa pagina deve essere aperta all\'interno di Telegram per inviare /open al bot.';
         return;
       }
 
