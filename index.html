@@ -54,6 +54,7 @@
       color: #ffffff;
       background: #1f8b4c;
       cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.2s ease;
     }
 
     button:active {
@@ -61,7 +62,7 @@
     }
 
     button:hover {
-      filter: brightness(1.05);
+      background: #17683a;
     }
 
     button:focus-visible {
@@ -97,18 +98,21 @@
 
     button.addEventListener('click', () => {
       if (!tg || typeof tg.sendData !== 'function') {
+        status.setAttribute('aria-live', 'assertive');
         status.textContent = 'Questa pagina deve essere aperta dentro Telegram per inviare /open al bot.';
         return;
       }
 
+      status.setAttribute('aria-live', 'polite');
       tg.sendData('/open');
       status.textContent = 'Comando /open inviato al bot.';
 
       if (typeof tg.close === 'function') {
-        window.setTimeout(() => {
+        setTimeout(() => {
           try {
             tg.close();
           } catch (error) {
+            status.setAttribute('aria-live', 'assertive');
             console.error('Unable to close Telegram Mini App automatically.', error);
             status.textContent = 'Comando /open inviato al bot. Chiudi la Mini App manualmente se resta aperta.';
           }
