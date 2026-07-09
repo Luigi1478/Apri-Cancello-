@@ -92,9 +92,6 @@
     const button = document.getElementById('open-gate');
     const status = document.getElementById('status');
     const tg = window.Telegram?.WebApp;
-    // Short buffer to let Telegram process sendData before closing the Mini App.
-    // This 500ms value is a conservative UI delay, not a documented Telegram requirement.
-    const TELEGRAM_CLOSE_DELAY_MS = 500;
 
     if (tg) {
       tg.ready();
@@ -108,21 +105,20 @@
         return;
       }
 
-      status.setAttribute('aria-live', 'polite');
       button.disabled = true;
-      tg.sendData('/open');
-      status.textContent = 'Comando /open inviato al bot.';
+      status.setAttribute('aria-live', 'polite');
 
-      if (typeof tg.close === 'function') {
-        setTimeout(() => {
-          try {
-            tg.close();
-          } catch (error) {
-            status.setAttribute('aria-live', 'assertive');
-            console.error('Unable to close Telegram Mini App automatically.', error);
-            status.textContent = 'Comando /open inviato al bot. Chiudi la Mini App manualmente se resta aperta.';
-          }
-        }, TELEGRAM_CLOSE_DELAY_MS);
+      try {
+        tg.sendData('/open');
+        // sendData closes the Mini App automatically; update the status
+        // as a brief confirmation before the app closes.
+        status.textContent = 'Comando /open inviato al bot.';
+      } catch (error) {
+        console.error('sendData non riuscito:', error);
+        button.disabled = false;
+        status.setAttribute('aria-live', 'assertive');
+        status.textContent =
+          'Impossibile inviare il comando. Assicurati di aprire questa Mini App tramite il pulsante tastiera del bot (non dal menu o da un link diretto).';
       }
     });
   </script>
