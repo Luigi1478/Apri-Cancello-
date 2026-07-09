@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apri Cancello Torricelli</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: Arial, sans-serif;
+      --page-background: #f4f4f4;
+      --card-background: #ffffff;
+      --text-color: #555555;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --page-background: #111827;
+        --card-background: #1f2937;
+        --text-color: #e5e7eb;
+      }
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: var(--page-background);
+    }
+
+    main {
+      width: min(90vw, 420px);
+      padding: 2rem;
+      text-align: center;
+      background: var(--card-background);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 1.8rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 1rem;
+      border: 0;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: #1f8b4c;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    button:active {
+      transform: scale(0.99);
+    }
+
+    button:disabled {
+      opacity: 0.7;
+      cursor: wait;
+    }
+
+    button:hover {
+      background: #17683a;
+    }
+
+    button:focus-visible {
+      outline: 3px solid #0f5f30;
+      outline-offset: 3px;
+    }
+
+    p {
+      margin-bottom: 0;
+      color: var(--text-color);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Controllo Cancello Torricelli</h1>
+    <button id="open-gate" type="button">Apri Cancello Torricelli</button>
+    <p id="status" role="status" aria-live="polite">Premi il pulsante per inviare il comando di apertura.</p>
+  </main>
+
+  <script>
+    const button = document.getElementById('open-gate');
+    const status = document.getElementById('status');
+    const tg = window.Telegram?.WebApp;
+    // Short buffer to let Telegram process sendData before closing the Mini App.
+    // This 500ms value is a conservative UI delay, not a documented Telegram requirement.
+    const TELEGRAM_CLOSE_DELAY_MS = 500;
+
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+
+    button.addEventListener('click', () => {
+      if (!tg || typeof tg.sendData !== 'function') {
+        status.setAttribute('aria-live', 'assertive');
+        status.textContent = 'Apri questa pagina dentro Telegram.';
+        return;
+      }
+
+      status.setAttribute('aria-live', 'polite');
+      button.disabled = true;
+      tg.sendData('/open');
+      status.textContent = 'Comando /open inviato al bot.';
+
+      if (typeof tg.close === 'function') {
+        setTimeout(() => {
+          try {
+            tg.close();
+          } catch (error) {
+            status.setAttribute('aria-live', 'assertive');
+            console.error('Unable to close Telegram Mini App automatically.', error);
+            status.textContent = 'Comando /open inviato al bot. Chiudi la Mini App manualmente se resta aperta.';
+          }
+        }, TELEGRAM_CLOSE_DELAY_MS);
+      }
+    });
+  </script>
+</body>
+</html>
