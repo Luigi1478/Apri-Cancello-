@@ -86,7 +86,8 @@
     const button = document.getElementById('open-gate');
     const status = document.getElementById('status');
     const tg = window.Telegram?.WebApp;
-    // Delay in milliseconds to let Telegram process sendData before closing the Mini App.
+    // Short buffer to let Telegram process sendData before closing the Mini App.
+    // This 500ms value is a conservative UI delay, not a documented Telegram requirement.
     const TELEGRAM_CLOSE_DELAY_MS = 500;
 
     if (tg) {
@@ -104,8 +105,13 @@
       status.textContent = 'Comando /open inviato al bot.';
 
       if (typeof tg.close === 'function') {
-        // Small delay so Telegram can process sendData before the Mini App closes.
-        window.setTimeout(() => tg.close(), TELEGRAM_CLOSE_DELAY_MS);
+        window.setTimeout(() => {
+          try {
+            tg.close();
+          } catch (error) {
+            status.textContent = 'Comando /open inviato al bot. Chiudi la Mini App manualmente se resta aperta.';
+          }
+        }, TELEGRAM_CLOSE_DELAY_MS);
       }
     });
   </script>
