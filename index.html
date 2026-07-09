@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apri Cancello Torricelli</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #f4f4f4;
+    }
+
+    main {
+      width: min(90vw, 420px);
+      padding: 2rem;
+      text-align: center;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 1.8rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 1rem;
+      border: 0;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: #1f8b4c;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.99);
+    }
+
+    p {
+      margin-bottom: 0;
+      color: #555555;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Apri Cancello Torricelli</h1>
+    <button id="open-gate" type="button">Apri Cancello Torricelli</button>
+    <p id="status">Premi il pulsante per inviare il comando di apertura.</p>
+  </main>
+
+  <script>
+    const button = document.getElementById('open-gate');
+    const status = document.getElementById('status');
+    const tg = window.Telegram && window.Telegram.WebApp;
+
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+
+    button.addEventListener('click', () => {
+      if (!tg || typeof tg.sendData !== 'function') {
+        status.textContent = 'Apri questa pagina dalla Mini App di Telegram per inviare /open al bot.';
+        return;
+      }
+
+      tg.sendData('/open');
+      status.textContent = 'Comando /open inviato al bot.';
+
+      if (typeof tg.close === 'function') {
+        window.setTimeout(() => tg.close(), 500);
+      }
+    });
+  </script>
+</body>
+</html>
