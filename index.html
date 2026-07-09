@@ -85,7 +85,7 @@
   <script>
     const button = document.getElementById('open-gate');
     const status = document.getElementById('status');
-    const tg = window.Telegram?.WebApp;
+    const tg = window.Telegram?.WebApp ?? null;
     // Short buffer to let Telegram process sendData before closing the Mini App.
     // This 500ms value is a conservative UI delay, not a documented Telegram requirement.
     const TELEGRAM_CLOSE_DELAY_MS = 500;
@@ -109,6 +109,7 @@
           try {
             tg.close();
           } catch (error) {
+            console.error('Unable to close Telegram Mini App automatically.', error);
             status.textContent = 'Comando /open inviato al bot. Chiudi la Mini App manualmente se resta aperta.';
           }
         }, TELEGRAM_CLOSE_DELAY_MS);
