@@ -58,8 +58,8 @@
 <body>
   <main>
     <h1>Apri Cancello Torricelli</h1>
-    <button id="open-gate" type="button">Apri Cancello Torricelli</button>
-    <p id="status">Premi il pulsante per inviare il comando di apertura.</p>
+    <button id="open-gate" type="button" aria-label="Invia comando di apertura cancello Torricelli">Apri Cancello Torricelli</button>
+    <p id="status" role="status" aria-live="polite">Premi il pulsante per inviare il comando di apertura.</p>
   </main>
 
   <script>
@@ -74,7 +74,7 @@
 
     button.addEventListener('click', () => {
       if (!tg || typeof tg.sendData !== 'function') {
-        status.textContent = 'Questa pagina deve essere aperta all\'interno di Telegram per inviare /open al bot.';
+        status.textContent = "Questa pagina deve essere aperta all'interno di Telegram per inviare /open al bot.";
         return;
       }
 
