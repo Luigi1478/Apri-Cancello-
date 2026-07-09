@@ -86,6 +86,7 @@
     const button = document.getElementById('open-gate');
     const status = document.getElementById('status');
     const tg = window.Telegram?.WebApp;
+    // Delay in milliseconds to let Telegram process sendData before closing the Mini App.
     const TELEGRAM_CLOSE_DELAY_MS = 500;
 
     if (tg) {
