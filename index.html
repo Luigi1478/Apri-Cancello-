@@ -60,6 +60,15 @@
       transform: scale(0.99);
     }
 
+    button:hover {
+      filter: brightness(1.05);
+    }
+
+    button:focus-visible {
+      outline: 3px solid #0f5f30;
+      outline-offset: 3px;
+    }
+
     p {
       margin-bottom: 0;
       color: var(--text-color);
@@ -69,7 +78,7 @@
 <body>
   <main>
     <h1>Apri Cancello Torricelli</h1>
-    <button id="open-gate" type="button" aria-label="Invia comando di apertura cancello Torricelli">Apri Cancello Torricelli</button>
+    <button id="open-gate" type="button">Apri Cancello Torricelli</button>
     <p id="status" role="status" aria-live="polite">Premi il pulsante per inviare il comando di apertura.</p>
   </main>
 
@@ -93,6 +102,7 @@
       status.textContent = 'Comando /open inviato al bot.';
 
       if (typeof tg.close === 'function') {
+        // Small delay so Telegram can process sendData before the Mini App closes.
         window.setTimeout(() => tg.close(), 500);
       }
     });
