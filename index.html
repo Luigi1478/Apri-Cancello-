@@ -86,7 +86,7 @@
   <script>
     const button = document.getElementById('open-gate');
     const status = document.getElementById('status');
-    const tg = window.Telegram?.WebApp ?? null;
+    const tg = window.Telegram?.WebApp;
     // Short buffer to let Telegram process sendData before closing the Mini App.
     // This 500ms value is a conservative UI delay, not a documented Telegram requirement.
     const TELEGRAM_CLOSE_DELAY_MS = 500;
@@ -99,7 +99,7 @@
     button.addEventListener('click', () => {
       if (!tg || typeof tg.sendData !== 'function') {
         status.setAttribute('aria-live', 'assertive');
-        status.textContent = 'Questa pagina deve essere aperta dentro Telegram per inviare /open al bot.';
+        status.textContent = 'Apri questa pagina dentro Telegram.';
         return;
       }
 
